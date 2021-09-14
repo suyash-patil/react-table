@@ -1,9 +1,7 @@
 .App {
   text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px;
+  margin: auto;
+  width: 50%;
 }
 
 .App-logo {
@@ -39,4 +37,7 @@
   to {
     transform: rotate(360deg);
   }
+}
+.MuiTableRow-root > td {
+  width: 180px !important;
 }

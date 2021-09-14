@@ -1,6 +1,6 @@
 import './App.css';
-import React, { useState,useRef, useEffect } from 'react';
-import {Input, makeStyles, MenuItem, Select, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
+import React, { useState} from 'react';
+import {ClickAwayListener, Input, makeStyles, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles({
@@ -12,24 +12,33 @@ const useStyles = makeStyles({
 
 function App() {
 
+  const changeEditableStatus = (idx) => {
+    let newRows = [...rows];
+    newRows[idx].editable = true;
+    setRows(newRows);
+  }
+
+  const handleClickAway = (idx) => {
+    let newRows = [...rows];
+    newRows[idx].editable = false;
+    setRows(newRows);
+  }
+
   const updateName = (idx) => e => {
     let newRows = [...rows];
     newRows[idx].name = e.target.value;
     setRows(newRows);
-    console.log("Name updated");
   }
   const updateStatus = (idx) => {
     let newRows = [...rows];
     if (newRows[idx].status === true) newRows[idx].status = false;
     else newRows[idx].status = true;
     setRows(newRows);
-    console.log("Status updated");
   }
   const updateAge = (idx) => e => {
     let newRows = [...rows];
     newRows[idx].age = e.target.value;
     setRows(newRows);
-    console.log("Age updated");
   }
 
   const data = [
@@ -97,7 +106,7 @@ function App() {
   const [rows,setRows] = useState(data);
   const classes = useStyles();
 
-  
+
   return (
     <div className="App">
       {rows && <TableContainer className={classes.table} component={Paper}>
@@ -117,10 +126,15 @@ function App() {
           </TableHead>
           <TableBody>
             {rows.map((row, idx) => (
-              <TableRow>
-                <TableCell>
-                  <Input type="text" onChange={updateName(idx)} value={row.name} />
+              <TableRow key={idx}>
+              <ClickAwayListener onClickAway={() => handleClickAway(idx)}>
+                <TableCell onClick={() => changeEditableStatus(idx)}>
+                  {row.editable ?
+                      <Input style={{ fontSize: "0.875rem"}} type="text" onChange={updateName(idx)} value={row.name} /> : row.name
+                  }
+
                 </TableCell>
+                </ClickAwayListener>
                 <TableCell>
                   <Switch checked={row.status} onChange={() => updateStatus(idx)} />
                 </TableCell>
